@@ -1,8 +1,15 @@
 # SyncPlanet
 
-## Language, Libraries
+## Language
 
 * Swift
+
+## API
+
+* [ヘルスプラネット](https://www.healthplanet.jp/apis/api.html)
+
+## Libraries
+
 * [SyncPlanet/Podfile at master · starhoshi/SyncPlanet](https://github.com/starhoshi/SyncPlanet/blob/master/Podfile)
 
 ## Overview
