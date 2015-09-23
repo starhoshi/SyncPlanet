@@ -49,70 +49,38 @@ class SyncHealth {
     }
     
     func fetchInnerscan(completionHandler: (ErrorType?) -> ()) -> () {
-        var param = [
+        let param = [
             "access_token": NSUserDefaults.standardUserDefaults().stringForKey("access_token")!,
             "date": "0",
             "tag": "6021,6022,6023,6024,6025,6026,6027,6028,6029,6030"
         ]
-        if let date: AnyObject = NSUserDefaults.standardUserDefaults().objectForKey("updated_at") {
-            param["from"] = DateFormatter().format(date as! NSDate,style: "yyyyMMddHHmmss")
-        }
-        
-        Alamofire.request(.GET, INNERSCAN_URL,  parameters: param)
-            .responseJSON { _, _, result in
-                switch result {
-                case .Success(let data):
-                    print(data)
-                    var json = JSON(data)
-                    for (index, _): (String, JSON) in json["data"] {
-                        self.writeData(json["data"][Int(index)!])
-                    }
-                    completionHandler(nil)
-                case .Failure(_, let error):
-                    print("Request failed with error: \(error)")
-                    completionHandler(error)
-                }
-        }
+        fetch(completionHandler, param: param, URL: INNERSCAN_URL)
     }
     
     func fetchSphygmomanometer(completionHandler: (ErrorType?) -> ()) -> () {
-        var param = [
+        let param = [
             "access_token": NSUserDefaults.standardUserDefaults().stringForKey("access_token")!,
             "date": "0",
             "tag": "622E,622F,6230"
         ]
-        if let date: AnyObject = NSUserDefaults.standardUserDefaults().objectForKey("updated_at") {
-            param["from"] = DateFormatter().format(date as! NSDate,style: "yyyyMMddHHmmss")
-        }
-        
-        Alamofire.request(.GET, SPHYGMOMANOMETER_URL, parameters: param)
-            .responseJSON { _, _, result in
-                switch result {
-                case .Success(let data):
-                    print(data)
-                    var json = JSON(data)
-                    for (index, _): (String, JSON) in json["data"] {
-                        self.writeData(json["data"][Int(index)!])
-                    }
-                    completionHandler(nil)
-                case .Failure(_, let error):
-                    print("Request failed with error: \(error)")
-                    completionHandler(error)
-                }
-        }
+        fetch(completionHandler, param: param, URL: SPHYGMOMANOMETER_URL)
     }
     
     func fetchPedometer(completionHandler: (ErrorType?) -> ()) -> () {
-        var param = [
+        let param = [
             "access_token": NSUserDefaults.standardUserDefaults().stringForKey("access_token")!,
             "date": "0",
             "tag": "6331,6335,6336"
         ]
+        fetch(completionHandler, param: param, URL: PEDOMETER_URL)
+    }
+
+    private func fetch(completionHandler: (ErrorType?) -> (), var param:[String : String], URL:String){
         if let date: AnyObject = NSUserDefaults.standardUserDefaults().objectForKey("updated_at") {
             param["from"] = DateFormatter().format(date as! NSDate,style: "yyyyMMddHHmmss")
         }
         print(param)
-        Alamofire.request(.GET, PEDOMETER_URL, parameters: param)
+        Alamofire.request(.GET, URL, parameters: param)
             .responseJSON { _, _, result in
                 switch result {
                 case .Success(let data):
@@ -127,7 +95,7 @@ class SyncHealth {
                     completionHandler(error)
                 }
         }
-        
+
     }
     
     private func writeData(json:JSON){
